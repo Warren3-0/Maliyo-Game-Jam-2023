@@ -31,14 +31,14 @@ MonoBehaviour:
     assemblyNames:
     - NaughtyAttributes.Test
     - Assembly-CSharp-firstpass
-    - Assembly-CSharp
     - LeanTransition
     - UIEffect_Demo
+    - Assembly-CSharp
     - CW.Common
-    - LeanCommon
     - LeanGUI
     - NaughtyAttributes.Core
     - UIEffect
+    - LeanCommon
     - NaughtyAttributes.Editor
     - LeanTransition.Editor
     showAdvancedSettings: 0
