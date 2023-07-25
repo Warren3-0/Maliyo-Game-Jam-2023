@@ -1,0 +1,27 @@
+using UnityEngine;
+using UnityEngine.Events;
+// Date updated: " + DateTime.Now.ToString("MM/dd/yyyy")
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    public UnityEvent startEvent, updateEvent, triggerEnterEvent, collisionEnterEvent;
+
+    private void Start()
+    {
+        startEvent.Invoke();
+    }
+
+    private void Update()
+    {
+        updateEvent.Invoke();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        triggerEnterEvent.Invoke();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        collisionEnterEvent.Invoke();
+    }
+}
