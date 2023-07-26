@@ -1,0 +1,7 @@
+using UnityEngine;
+// Date updated: " + DateTime.Now.ToString("MM/dd/yyyy")
+[CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "#SCRIPTNAME#")]
+public class #SCRIPTNAME# : ScriptableObject
+{
+    //Add your code
+}

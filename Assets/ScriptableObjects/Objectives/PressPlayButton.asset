@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4425a392fabe9479f8917416ba5d7e, type: 3}
+  m_Name: PressPlayButton
+  m_EditorClassIdentifier: 
+  Name: Play Button
+  DisplayName: Press Play Button
+  rewardAmount: 10
+  isBuyableData: 0
+  identifier: 
+  data: 2
+  CompleteCondition: 0
+  floatTargetValue: 0
+  IntTargetValue: 0
+  boolTargetValue: 1
+  GameEvents:
+  - {fileID: 11400000, guid: de7ba09fd2d73c849bc9be82fcb6cb69, type: 2}
+  Attached_GameEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000}
+        m_TargetAssemblyTypeName: ObjectivesSO, Assembly-CSharp
+        m_MethodName: SetValue
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  unityIntEvent: {fileID: 0}
+  Attached_IntEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  unityFloatEvent: {fileID: 0}
+  Attached_FloatEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnObjectiveCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpent:
+    m_PersistentCalls:
+      m_Calls: []
