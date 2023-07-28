@@ -7,14 +7,14 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] obstaclePrefabs;
     public float startDelay = 2.0f;
     public float spawnInterval = 2.0f;
-    public float spawnOffsetX = 2f;
-    public float maxYSpawnPosition = 5f;
-    public float minYSpawnPosition = -5f;
-    public float despawnDelay = 2.0f;
-    public float waitDelay = 2.0f;
+    public float spawnOffsetZ = 5f;
+    public float minXspawnPosition = -0.6f;
+    public float maxXspawnPosition = 0.12f;
 
     private Transform playerTransform;
     private Camera mainCamera;
+    public Transform spawnedObjectsParent;
+    [SerializeField] private float sphereRadius = 0.5f;
 
     private void Start()
     {
@@ -30,22 +30,22 @@ public class SpawnManager : MonoBehaviour
         while (true)
         {
             bool spawnEnemy = Random.Range(0f, 1f) > 0.5f;
-            bool spawnObstacle = Random.Range(0f, 1f) > 0.7f;
+            bool spawnObstacle = Random.Range(0f, 1f) > 0.8f;
 
             if (spawnEnemy)
             {
                 GameObject enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
                 Vector3 enemySpawnPosition = GenerateRandomSpawnPosition();
-                GameObject enemy = Instantiate(enemyPrefab, enemySpawnPosition, Quaternion.identity);
-                StartCoroutine(DestroyOffscreenObject(enemy));
+                GameObject enemyGO = Instantiate(enemyPrefab, enemySpawnPosition, Quaternion.identity);
+                enemyGO.transform.SetParent(spawnedObjectsParent);
             }
 
             if (spawnObstacle)
             {
                 GameObject obstaclePrefab = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
                 Vector3 obstacleSpawnPosition = GenerateRandomSpawnPosition();
-                GameObject obstacle = Instantiate(obstaclePrefab, obstacleSpawnPosition, Quaternion.identity);
-                StartCoroutine(DestroyOffscreenObject(obstacle));
+                GameObject obstacleGO = Instantiate(obstaclePrefab, obstacleSpawnPosition, Quaternion.identity);
+                obstacleGO.transform.SetParent(spawnedObjectsParent);
             }
 
             yield return new WaitForSeconds(spawnInterval);
@@ -54,29 +54,38 @@ public class SpawnManager : MonoBehaviour
 
     private Vector3 GenerateRandomSpawnPosition()
     {
-        float y = Random.Range(minYSpawnPosition, maxYSpawnPosition);
-        float playerX = playerTransform.position.x;
-        float x = playerX + spawnOffsetX;
+        int maxAttempts = 10;
+        int currentAttempts = 0;
 
-        return new Vector3(x, y, 0f);
-    }
+        float z = playerTransform.position.z + spawnOffsetZ;
+        float x = Random.Range(minXspawnPosition, maxXspawnPosition);
 
-    private IEnumerator DestroyOffscreenObject(GameObject obj)
-    {
-        yield return new WaitForSeconds(waitDelay); // Wait for the next frame to ensure object position is up to date
+        Vector3 spawnPosition =  new Vector3(x, 0, z);
 
-        while (IsOffscreen(obj))
+        while (currentAttempts < maxAttempts && IsPositionOccupied(spawnPosition))
         {
-            yield return null;
+            z = playerTransform.position.z + spawnOffsetZ;
+            x = Random.Range(minXspawnPosition, maxXspawnPosition);
+
+            spawnPosition =  new Vector3(x, 0, z);
+            currentAttempts++;
         }
 
-        yield return new WaitForSeconds(despawnDelay);
-        Destroy(obj);
+        return spawnPosition;
     }
 
-    private bool IsOffscreen(GameObject obj)
+    private bool IsPositionOccupied(Vector3 position)
     {
-        Vector3 screenPos = mainCamera.WorldToViewportPoint(obj.transform.position);
-        return (screenPos.x < 0f || screenPos.x > 1f || screenPos.y < 0f || screenPos.y > 1f);
+        Collider[] colliders = Physics.OverlapSphere(position, sphereRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Obstacle") ||
+                collider.CompareTag("Enemy"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

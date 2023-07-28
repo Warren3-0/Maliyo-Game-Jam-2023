@@ -4,8 +4,8 @@ public class PlayerTest : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float verticalSpeed = 3f;
-    public float minYPosition = -0.45f;
-    public float maxYPosition = 0.45f;
+    public float minXPosition = -0.6f;
+    public float maxXPosition = 0.12f;
 
     private Rigidbody rb;
 
@@ -16,6 +16,6 @@ public class PlayerTest : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
+        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
     }
 }
