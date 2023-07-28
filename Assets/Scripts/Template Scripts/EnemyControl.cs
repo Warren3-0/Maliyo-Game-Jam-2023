@@ -1,68 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyControl : MonoBehaviour
 {
-    private NavMeshAgent navAgent;
-    private float wanderDistance = 3;
+    public float forwardSpeed = 5f;
+    public float backwardSpeed = 2f;
+    public float playerDetectionDistance = 1f;
 
-    public EnemySO data;
-
-   
+    private Transform playerTransform;
+    private bool isMovingForward = true;
 
     private void Start()
     {
-        if (navAgent == null)
-            navAgent = this.GetComponent<NavMeshAgent>();
-
-        if (data != null)
-            LoadEnemy(data);
-    }
-
-    private void LoadEnemy(EnemySO _data)
-    {
-        //remove children objects i.e. visuals
-        foreach (Transform child in this.transform)
-        {
-            if (Application.isEditor)
-                DestroyImmediate(child.gameObject);
-            else
-                Destroy(child.gameObject);
-        }
-
-        //load current enemy visuals
-        GameObject visuals = Instantiate(data.enemyModel);
-        visuals.transform.SetParent(this.transform);
-        visuals.transform.localPosition = Vector3.zero;
-        visuals.transform.rotation = Quaternion.identity;
-
-        //use stats data to set up enemy
-        if (navAgent == null)
-            navAgent = this.GetComponent<NavMeshAgent>();
-
-        this.navAgent.speed = data.speed;
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
     {
-        if (data == null)
+        if (playerTransform == null)
             return;
 
-        if (navAgent.remainingDistance < 1f)
-            GetNewDestination();
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+
+        if (isMovingForward)
+        {
+            if (distanceToPlayer > playerDetectionDistance)
+            {
+                transform.Translate(Vector3.back * backwardSpeed * Time.deltaTime);
+            }
+            else
+            {
+                isMovingForward = false;
+            }
+        }
+        else
+        {
+            transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
+        }
     }
-
-    private void GetNewDestination()
-    {
-        Vector3 nextDestination = this.transform.position;
-        nextDestination += wanderDistance * new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
-
-       
-            navAgent.SetDestination(nextDestination);
-    }
-
-    
 }
