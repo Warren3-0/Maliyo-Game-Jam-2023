@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -15,11 +16,22 @@ public class SpawnManager : MonoBehaviour
     private Camera mainCamera;
     public Transform spawnedObjectsParent;
     [SerializeField] private float sphereRadius = 0.5f;
+    [SerializeField] private float differenceRadius = 0.1f;
+
+    public bool canSpawn = true;
+
+    public static SpawnManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         mainCamera = Camera.main;
+        canSpawn = true;
         StartCoroutine(SpawnObstaclesAndEnemies());
     }
 
@@ -30,13 +42,29 @@ public class SpawnManager : MonoBehaviour
         while (true)
         {
             bool spawnEnemy = Random.Range(0f, 1f) > 0.5f;
-            bool spawnObstacle = Random.Range(0f, 1f) > 0.8f;
+            bool spawnObstacle = Random.Range(0f, 1f) > 0.5f;
 
-            if (spawnEnemy)
+            if (spawnEnemy && canSpawn)
             {
-                GameObject enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
-                Vector3 enemySpawnPosition = GenerateRandomSpawnPosition();
+                int randomIndex = Random.Range(0, enemyPrefabs.Length);
+                GameObject enemyPrefab = enemyPrefabs[randomIndex];
+
+                EnemyContainer enemy = enemyPrefab.GetComponent<EnemyContainer>();
+
+                Vector3 enemySpawnPosition = new Vector3();
+
+                if (enemy.enemyCount == 1)
+                    enemySpawnPosition = GenerateRandomSpawnPosition();
+                else
+                    enemySpawnPosition = GenerateEnemyShipSpawnPosition();
+                
                 GameObject enemyGO = Instantiate(enemyPrefab, enemySpawnPosition, Quaternion.identity);
+                GameManager.Instance.SetEnemies(enemyGO);
+
+                if (enemySpawnPosition == Vector3.zero)
+                {
+                    Destroy(enemyGO);
+                }
                 enemyGO.transform.SetParent(spawnedObjectsParent);
             }
 
@@ -46,6 +74,10 @@ public class SpawnManager : MonoBehaviour
                 Vector3 obstacleSpawnPosition = GenerateRandomSpawnPosition();
                 GameObject obstacleGO = Instantiate(obstaclePrefab, obstacleSpawnPosition, Quaternion.identity);
                 obstacleGO.transform.SetParent(spawnedObjectsParent);
+                if (obstacleSpawnPosition == Vector3.zero)
+                {
+                    Destroy(obstacleGO);
+                }
             }
 
             yield return new WaitForSeconds(spawnInterval);
@@ -54,21 +86,63 @@ public class SpawnManager : MonoBehaviour
 
     private Vector3 GenerateRandomSpawnPosition()
     {
-        int maxAttempts = 10;
+        int maxAttempts = 15;
         int currentAttempts = 0;
 
-        float z = playerTransform.position.z + spawnOffsetZ;
-        float x = Random.Range(minXspawnPosition, maxXspawnPosition);
+        Vector3 spawnPosition = Vector3.zero;
 
-        Vector3 spawnPosition =  new Vector3(x, 0, z);
-
-        while (currentAttempts < maxAttempts && IsPositionOccupied(spawnPosition))
+        while (currentAttempts < maxAttempts && spawnPosition == Vector3.zero)
         {
-            z = playerTransform.position.z + spawnOffsetZ;
-            x = Random.Range(minXspawnPosition, maxXspawnPosition);
+            float z = playerTransform.position.z + spawnOffsetZ;
+            float x = Random.Range(minXspawnPosition, maxXspawnPosition);
 
-            spawnPosition =  new Vector3(x, 0, z);
+            Vector3 tempSpawnPosition = new Vector3(x, 0, z);
+
+            if (!IsPositionOccupied(tempSpawnPosition))
+            {
+                spawnPosition = tempSpawnPosition;
+            }
+            else
+                Debug.Log("Position Occupied");
+            
             currentAttempts++;
+        }
+
+        if (spawnPosition == Vector3.zero)
+        {
+            Debug.Log("Failed to find a valid spawn position after " + maxAttempts + " attempts.");
+        }
+
+        return spawnPosition;
+    }
+
+    private Vector3 GenerateEnemyShipSpawnPosition()
+    {
+        int maxAttempts = 15;
+        int currentAttempts = 0;
+
+        Vector3 spawnPosition = Vector3.zero;
+
+        while (currentAttempts < maxAttempts && spawnPosition == Vector3.zero)
+        {
+            float z = playerTransform.position.z + spawnOffsetZ;
+            float x = Random.Range(minXspawnPosition, maxXspawnPosition);
+
+            Vector3 tempSpawnPosition = new Vector3(0, 0, z);
+
+            if (!IsPositionOccupied(tempSpawnPosition))
+            {
+                spawnPosition = tempSpawnPosition;
+            }
+            else
+                Debug.Log("Position Occupied");
+            
+            currentAttempts++;
+        }
+
+        if (spawnPosition == Vector3.zero)
+        {
+            Debug.Log("Failed to find a valid spawn position after " + maxAttempts + " attempts.");
         }
 
         return spawnPosition;
