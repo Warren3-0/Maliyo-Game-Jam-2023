@@ -19,7 +19,7 @@ public class EnemyLaser : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.LogError("Laser Hit Player");
+            other.GetComponent<PlayerController>().TakeDamage(10f);
             Destroy(gameObject);
         }
     }

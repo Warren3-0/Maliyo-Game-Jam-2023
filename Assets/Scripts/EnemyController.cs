@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -13,19 +14,23 @@ public class EnemyController : MonoBehaviour
     private float shootingInterval = 2f; 
      public GameObject laserPrefab;
     public Transform firePoint;
-    public int maxHealth = 100;
+    public float maxHealth = 50;
     public float maneuverDistance = 0.2f;
     public float maneuverDuration = 1f;
     private bool isManeuvering = false;
     private EnemyContainer enemyContainer;
     public float avoidanceRadius = 0.15f;
 
-    private float health = 50f;
+    private float currentHealth;
+    public Slider healthBar;
 
     private void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         enemyContainer = transform.parent.GetComponent<EnemyContainer>();
+        currentHealth = maxHealth;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = currentHealth;
     }
 
     private void Update()
@@ -53,13 +58,19 @@ public class EnemyController : MonoBehaviour
         {
             transform.Translate(transform.forward * forwardSpeed * Time.deltaTime);
         }
+
+        if (IsOverlappingWithOtherShips(transform.position))
+        {
+            StartCoroutine(PerformManeuver());
+        }
     }
 
     public void TakeDamage(float amount)
     {
-        health -= amount;
+        currentHealth -= amount;
+        healthBar.value = currentHealth;
 
-        if (health <= 0f)
+        if (currentHealth <= 0f)
         {
             Die();
         }
@@ -73,7 +84,7 @@ public class EnemyController : MonoBehaviour
     private void Die()
     {
         Destroy(gameObject);
-        GameManager.Instance.RemoveEnemy();
+        GameManager.Instance.RemoveEnemy(enemyContainer);
     }
 
     private IEnumerator ShootLasers()
@@ -95,41 +106,41 @@ public class EnemyController : MonoBehaviour
 
     
     private IEnumerator PerformManeuver()
-{
-    isManeuvering = true;
-
-    Vector3 originalPosition = transform.position;
-    Vector3 direction = Vector3.right;
-
-    for (int i = 0; i < 2; i++)
     {
-        Vector3 testPosition = originalPosition + direction * maneuverDistance;
+        isManeuvering = true;
 
-        if (!IsOverlappingWithOtherShips(testPosition) && IsWithinBounds(testPosition))
+        Vector3 originalPosition = transform.position;
+        Vector3 direction = Vector3.right;
+
+        for (int i = 0; i < 2; i++)
         {
-            float elapsedTime = 0f;
+            Vector3 testPosition = originalPosition + direction * maneuverDistance;
 
-            while (elapsedTime < maneuverDuration)
+            if (!IsOverlappingWithOtherShips(testPosition) && IsWithinBounds(testPosition))
             {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.SmoothStep(0f, 1f, elapsedTime / maneuverDuration);
-                Vector3 newPosition = transform.position;
-                newPosition.x = Mathf.Lerp(originalPosition.x, testPosition.x, t);
-                transform.position = newPosition;
-                yield return null;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < maneuverDuration)
+                {
+                    elapsedTime += Time.deltaTime;
+                    float t = Mathf.SmoothStep(0f, 1f, elapsedTime / maneuverDuration);
+                    Vector3 newPosition = transform.position;
+                    newPosition.x = Mathf.Lerp(originalPosition.x, testPosition.x, t);
+                    transform.position = newPosition;
+                    yield return null;
+                }
+
+                break;
             }
 
-            break;
+            direction = -direction;
         }
 
-        direction = -direction;
+        isManeuvering = false;
     }
 
-    isManeuvering = false;
-}
 
-
-     private bool IsOverlappingWithOtherShips(Vector3 position)
+    private bool IsOverlappingWithOtherShips(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapSphere(position, avoidanceRadius);
         foreach (Collider collider in colliders)

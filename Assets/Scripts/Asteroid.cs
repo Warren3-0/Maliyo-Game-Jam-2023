@@ -48,6 +48,7 @@ public class Asteroid : MonoBehaviour
     {
         if (collider.CompareTag("Player"))
         {
+            collider.GetComponent<PlayerController>().TakeDamage(5f);
             Debug.Log("Rock Hit Player");
         }
     }
