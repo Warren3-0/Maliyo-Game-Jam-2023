@@ -5,14 +5,8 @@ public class EnemyController : MonoBehaviour
 {
     public float forwardSpeed = 5f;
     public float backwardSpeed = 2f;
-    public LayerMask enemyLayer;
 
     public float playerDetectionDistance = 1f;
-    public float detectionRange = 0.5f;
-    public float avoidanceRadius = 2f;
-    public float separationRadius = 2f;
-    public float separationWeight = 2f;
-
     private Transform playerTransform;
     private bool isMovingForward = true;
 

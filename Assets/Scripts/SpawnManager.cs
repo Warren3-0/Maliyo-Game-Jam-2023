@@ -53,7 +53,7 @@ public class SpawnManager : MonoBehaviour
 
                 Vector3 enemySpawnPosition = new Vector3();
 
-                if (enemy.enemyCount <= 2)
+                if (enemy.enemyCount == 2)
                     enemySpawnPosition = GenerateRandomSpawnPosition();
                 else
                     enemySpawnPosition = GenerateEnemyShipSpawnPosition();
