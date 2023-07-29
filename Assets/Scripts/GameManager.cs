@@ -33,5 +33,9 @@ public class GameManager : MonoBehaviour
     public void RemoveEnemy()
     {
         currentEnemyShipsCount--;
+        if (currentEnemyShipsCount <= 1)
+        {
+            SpawnManager.Instance.canSpawn = true;
+        }
     }
 }

@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour
     private Transform playerTransform;
     private bool isMovingForward = true;
 
+    private float health = 50f;
+
     private void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -39,5 +41,20 @@ public class EnemyController : MonoBehaviour
         {
             transform.Translate(transform.forward * forwardSpeed * Time.deltaTime);
         }
+    }
+
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+        GameManager.Instance.RemoveEnemy();
     }
 }

@@ -23,8 +23,9 @@ public class Comet : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        if (Vector3.Distance(transform.position, targetPosition) < 0.05f)
         {
+            Debug.Log("Comet has hit the player");
             Destroy(gameObject);
         }
     }
