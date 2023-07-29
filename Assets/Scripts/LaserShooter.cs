@@ -32,6 +32,14 @@ public class LaserShooter : MonoBehaviour
             {
                 enemy.TakeDamage(damage);
             }
+            else
+            {
+                Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
+                if (asteroid != null)
+                {
+                    asteroid.TakeDamage(damage);
+                }
+            }
         }
     }
 }

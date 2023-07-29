@@ -8,6 +8,7 @@ public class Asteroid : MonoBehaviour
 
     private Vector3 targetPosition;
     private bool isMovingUp = false;
+    public float health = 30.0f;
 
     private void Start()
     {
@@ -31,6 +32,23 @@ public class Asteroid : MonoBehaviour
         {
             targetPosition.y = 0f;
             transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        }
+    }
+
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+        {
+            Debug.Log("Rock Hit Player");
         }
     }
 }

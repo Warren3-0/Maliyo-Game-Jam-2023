@@ -31,6 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7833543988191110926}
+  - {fileID: 2318212729958209791}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -61,14 +62,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardSpeed: 0.5
   backwardSpeed: 0.5
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
   playerDetectionDistance: 0.8
-  detectionRange: 0.5
-  avoidanceRadius: 2
-  separationRadius: 5
-  separationWeight: 5
+  shootingInterval: 1
+  laserPrefab: {fileID: 8241031561014344140, guid: 94e410a6fb999c44398f36eb48b1d7c7, type: 3}
+  firePoint: {fileID: 2318212729958209791}
+  maxHealth: 100
+  maneuverDistance: 0.2
+  maneuverDuration: 1
+  avoidanceRadius: 0.15
+--- !u!1 &6038854776927001198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2318212729958209791}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2318212729958209791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038854776927001198}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3101088341919837574}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7833543988190757546
 PrefabInstance:
   m_ObjectHideFlags: 0
