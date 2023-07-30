@@ -16,13 +16,17 @@ public class EnemyController : MonoBehaviour
     public Transform firePoint;
     public float maxHealth = 50;
     public float maneuverDistance = 0.2f;
-    public float maneuverDuration = 1f;
+    public float maneuverDuration = 2f;
     private bool isManeuvering = false;
     private EnemyContainer enemyContainer;
     public float avoidanceRadius = 0.15f;
 
     private float currentHealth;
     public Slider healthBar;
+    public EnemySO enemySO;
+    public Transform explosionSpawnPoint;
+    public ParticleSystem muzzleFlash;
+
 
     private void Start()
     {
@@ -59,7 +63,7 @@ public class EnemyController : MonoBehaviour
             transform.Translate(transform.forward * forwardSpeed * Time.deltaTime);
         }
 
-        if (IsOverlappingWithOtherShips(transform.position))
+        if (IsOverlappingWithOtherShips(transform.position * maneuverDistance))
         {
             StartCoroutine(PerformManeuver());
         }
@@ -83,21 +87,26 @@ public class EnemyController : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        GameObject explosion = Instantiate(enemySO.explosionVFX, explosionSpawnPoint.transform.position, Quaternion.identity);
+        Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration + 0.1f);
         GameManager.Instance.RemoveEnemy(enemyContainer);
+        Destroy(gameObject);
     }
 
     private IEnumerator ShootLasers()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         
         while (true)
         {
             if (playerTransform != null)
             {
+                muzzleFlash.Play();
                 Vector3 directionToPlayer = playerTransform.position - firePoint.position;
                 GameObject laserGO = Instantiate(laserPrefab, firePoint.position, Quaternion.LookRotation(directionToPlayer));
-                Destroy(laserGO, 5f);
+                EnemyLaser laser = laserGO.GetComponent<EnemyLaser>();
+                laser.SetDamage(enemySO.damagePoints);
+                Destroy(laserGO, 2f);
             }
 
             yield return new WaitForSeconds(shootingInterval);

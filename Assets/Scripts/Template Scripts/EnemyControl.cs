@@ -1,40 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyControl : MonoBehaviour
 {
-    public float forwardSpeed = 5f;
-    public float backwardSpeed = 2f;
-    public float playerDetectionDistance = 1f;
-
-    private Transform playerTransform;
-    private bool isMovingForward = true;
+    public float damage = 10f;
+    public float range = 100f;
+    public Camera mainCamera;
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 20f;
+    public float bulletLifetime = 3f;
 
     private void Start()
     {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        mainCamera = Camera.main;
     }
 
-    private void Update()
+    void Update()
     {
-        if (playerTransform == null)
-            return;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-
-        if (isMovingForward)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (distanceToPlayer > playerDetectionDistance)
+            Shoot(); 
+        }
+    }
+
+    public void Shoot()
+    {
+        RaycastHit hit;
+        Vector3 shootDirection;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, range))
+        {
+            Debug.Log(hit.transform.name);
+            shootDirection = (hit.point - transform.position).normalized;
+            EnemyController enemy  = hit.transform.GetComponent<EnemyController>();
+            if (enemy != null)
             {
-                transform.Translate(Vector3.back * backwardSpeed * Time.deltaTime);
+                enemy.TakeDamage(damage);
             }
             else
             {
-                isMovingForward = false;
+                Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
+                if (asteroid != null)
+                {
+                    asteroid.TakeDamage(damage);
+                }
             }
         }
         else
         {
-            transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
+            shootDirection = transform.forward;
         }
     }
 }

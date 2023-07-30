@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         EnemyContainer enemyContainer = enemyGO.GetComponent<EnemyContainer>();
         currentEnemyShipsCount += enemyContainer.enemyCount;
 
-        if (currentEnemyShipsCount >= 1)
+        if (currentEnemyShipsCount >= 4)
             SpawnManager.Instance.canSpawn = false;
     }
 
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         currentEnemyShipsCount--;
         enemy.enemyCount--;
-        if (currentEnemyShipsCount <= 1)
+        if (currentEnemyShipsCount <= 2)
         {
             SpawnManager.Instance.canSpawn = true;
         }
