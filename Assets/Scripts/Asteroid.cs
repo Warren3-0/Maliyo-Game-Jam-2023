@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public float detectionRange = 0.5f;
+    public float detectionRange = 0.65f;
     public float moveSpeed = 2f;
     public Transform playerTransform;
 
     private Vector3 targetPosition;
     private bool isMovingUp = false;
-    public float health = 30.0f;
+    public float health = 20.0f;
 
     private void Start()
     {
