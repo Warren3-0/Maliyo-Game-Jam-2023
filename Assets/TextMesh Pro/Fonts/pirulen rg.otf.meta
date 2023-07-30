@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 8cc04dc67bea29140b83beed449d8fbe
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Pirulen
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 6660561ec1b27774d9c94cfcac7d36da, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
