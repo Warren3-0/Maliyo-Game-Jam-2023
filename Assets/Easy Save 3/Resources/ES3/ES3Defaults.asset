@@ -29,22 +29,18 @@ MonoBehaviour:
     referenceMode: 2
     serializationDepthLimit: 64
     assemblyNames:
+    - NaughtyAttributes.Test
     - Assembly-CSharp-firstpass
+    - LeanTransition
     - UIEffect_Demo
     - Assembly-CSharp
     - CW.Common
     - LeanGUI
-    - LeanTransition
-    - Autodesk.Fbx
-    - UIEffect
-    - NaughtyAttributes.Test
     - NaughtyAttributes.Core
+    - UIEffect
     - LeanCommon
-    - FbxBuildTestAssets
     - NaughtyAttributes.Editor
-    - PsdPlugin
     - LeanTransition.Editor
-    - Autodesk.Fbx.Editor
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1
