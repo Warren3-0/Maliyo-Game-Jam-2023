@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         if (currentHealth <= 0)
         {
             GameObject explosion = Instantiate(explosionVFX, explosionSpawnPoint.transform.position, Quaternion.identity);
-            Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration - 1f);
+            Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
             OnGameOver.Raise();
             gameObject.SetActive(false);
         }
