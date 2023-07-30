@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream
 guid: 373eacac71c062249b617e2b1c8a4705
+=======
+guid: f1e000fcd9391f84b8ea63c6af8e28bf
+>>>>>>> Stashed changes
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -39,7 +43,11 @@ TextureImporter:
     wrapU: 0
     wrapV: 0
     wrapW: 0
+<<<<<<< Updated upstream
   nPOTScale: 1
+=======
+  nPOTScale: 0
+>>>>>>> Stashed changes
   lightmap: 0
   compressionQuality: 50
   spriteMode: 0
@@ -53,7 +61,11 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
+<<<<<<< Updated upstream
   textureType: 0
+=======
+  textureType: 8
+>>>>>>> Stashed changes
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
