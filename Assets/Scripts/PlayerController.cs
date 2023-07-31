@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
@@ -13,6 +14,9 @@ public class PlayerController : MonoBehaviour
     public Transform explosionSpawnPoint;
     public GameObject explosionVFX;
 
+    private bool isMovingLeft = false;
+    private bool isMovingRight = false;
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -24,13 +28,36 @@ public class PlayerController : MonoBehaviour
     {
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
-        float horizontalInput = Input.GetAxis("Horizontal");
+        float horizontalMovement = 0f;
+        if (isMovingLeft)
+            horizontalMovement = -1f;
+        else if (isMovingRight)
+            horizontalMovement = 1f;
 
-        float horizontalMovement = horizontalInput * horizontalSpeed * Time.deltaTime;
-
+        horizontalMovement *= horizontalSpeed * Time.deltaTime;
+        
         float newXPosition = Mathf.Clamp(transform.position.x + horizontalMovement, minXPosition, maxXPosition);
-
         transform.position = new Vector3(newXPosition, transform.position.y, transform.position.z);
+    }
+
+    public void OnLeftButtonDown()
+    {
+        isMovingLeft = true;
+    }
+
+    public void OnLeftButtonUp()
+    {
+        isMovingLeft = false;
+    }
+
+    public void OnRightButtonDown()
+    {
+        isMovingRight = true;
+    }
+
+    public void OnRightButtonUp()
+    {
+        isMovingRight = false;
     }
 
     public void TakeDamage(float amount)

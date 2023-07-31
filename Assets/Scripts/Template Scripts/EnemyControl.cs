@@ -1,54 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class EnemyControl : MonoBehaviour
 {
-    public float damage = 10f;
-    public float range = 100f;
-    public Camera mainCamera;
-    public GameObject bulletPrefab;
-    public float bulletSpeed = 20f;
-    public float bulletLifetime = 3f;
+    public float moveSpeed = 5f;
+    public float horizontalSpeed = 3f;
+    public float minXPosition = -0.6f;
+    public float maxXPosition = 0.12f;
+    private float currentHealth;
+    public float maxHealth = 100f;
+    public GameEvent OnGameOver;
+    public Slider healthBar;
+    public Transform explosionSpawnPoint;
+    public GameObject explosionVFX;
 
     private void Start()
     {
-        mainCamera = Camera.main;
+        currentHealth = maxHealth;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = currentHealth;
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Shoot(); 
-        }
+        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+        float horizontalMovement = horizontalInput * horizontalSpeed * Time.deltaTime;
+
+        float newXPosition = Mathf.Clamp(transform.position.x + horizontalMovement, minXPosition, maxXPosition);
+
+        transform.position = new Vector3(newXPosition, transform.position.y, transform.position.z);
     }
 
-    public void Shoot()
+    public void TakeDamage(float amount)
     {
-        RaycastHit hit;
-        Vector3 shootDirection;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, range))
+        currentHealth -= amount;
+        healthBar.value = currentHealth;
+
+        if (currentHealth <= 0)
         {
-            Debug.Log(hit.transform.name);
-            shootDirection = (hit.point - transform.position).normalized;
-            EnemyController enemy  = hit.transform.GetComponent<EnemyController>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage);
-            }
-            else
-            {
-                Asteroid asteroid = hit.transform.GetComponent<Asteroid>();
-                if (asteroid != null)
-                {
-                    asteroid.TakeDamage(damage);
-                }
-            }
-        }
-        else
-        {
-            shootDirection = transform.forward;
+            GameObject explosion = Instantiate(explosionVFX, explosionSpawnPoint.transform.position, Quaternion.identity);
+            Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
+            OnGameOver.Raise();
+            gameObject.SetActive(false);
         }
     }
 }
